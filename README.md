@@ -42,6 +42,69 @@ Po prečítaní symbolu k zo stavu mriezka sa program ukonci. Tak som si označi
 ## Program
 Class TuringMachine, je tam definovana paska(z inputu),co je blank, kde sa nastavi hlava(nasledne ide do funkcie find_first_number, kde vo funkcii pozrie kde sa nachadza to nase slovo), no a zaciatocny state ktory je zaciatok. 
 def changestate: tu sa printuju vsetky kroky pasky a su tu definovane vsetky stavy. Funkcia write napise tam kde sa nachadza hlava dany symbol. Funkcia move je definovana na prechadzanie paskou doprava a dolava. Funkcia run prebhene cely program, 
+## GIT repository
+Kód je písaný v pythone čiže je pod názvom main.py
+## YAML kód pre TM.io
+input: '101#10#110#1#111'
+blank: '#'
+start state: zaciatok
+
+table:
+  zaciatok:
+    [1,0]: {L}
+    ['#']: {write: 'z',R: najdikoniec}
+  najdikoniec:
+    [1,0]: {R}
+    ['#']: {R: mriezkakoniec}
+  mriezkakoniec:
+    [1,0]: {R: najdikoniec}
+    ['#']: {L: idemnazaciatok, write: 'k'}
+  idemnazaciatok:
+    [1,0,'#']: L
+    ['z']: {R: doprava}
+  doprava:
+    [1,0]: R
+    ['#']: {write: + ,R: mriezka}
+    [' ']: R
+  mriezka:
+    ['#']: {L: citaj}
+    [1,0]: {R}
+    ['k']: {R: done}
+  citaj:
+    [1]: {write: 'c', L: mam1}
+    [0]: {write: 'c', L: mam0}
+    [+]: {write: ' ', L: prepis}
+  mam1:
+    {[0,1]: L, +: {L: pripocitaj1}}
+  mam0:
+    {[0,1]: L, +: {L: pripocitaj0}}
+  pripocitaj1:
+    [0,'#']: {write: I, R: vymaz1}
+    1      : {write: O, L: prenasam}
+    [O,I]  : L
+    [' '] : L
+  pripocitaj0:
+    [0]: {write: O, R: vymaz0}
+    1      : {write: I, R: vymaz0}
+    [O,I]  : L
+    [' '] : L
+  vymaz1:
+    [0,1,O,I,+,' ']: R
+    c: {write: ' ', L: citaj}
+  vymaz0:
+    [0,1,O,I,+,' ']: R
+    c: {write: ' ', L: citaj}
+  prenasam:
+    [0,'z']: {write: 1, R: vymaz1}
+    1      : {write: 0, L}
+  prepis:
+    ['I']: {write: 1, L}
+    ['O']: {write: 0, L}
+    ['z']: {R: doprava}
+    [1,0]: {L}
+    [' ']: {L}
+    ['#']: {write: 'z',R: doprava}
+  done:
 
 Zdroje: 
 turingmachine.io
