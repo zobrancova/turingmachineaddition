@@ -4,7 +4,7 @@ Z predošlej fakulty som bola oboznámená simulátorom TS, turingmachine.io. V 
 Pre tento simulátor sa využíva kód yaml, ktorý som potom jednoducho pretvorila do programovacieho jazyka Python, v ktorom je výsledný program urobený.
 
 ## LOGIKA programu
-
+"Nekonečnú pásku mám tak spravenú, že si vytvorím array s prázdnymi symbolmi a potom tam vlozim vstup od usera. 
 ### Stav zaciatok
 Ak prečítam 1 alebo 0, choď doľava a označ si začiatok slova z. Potom choď doprava a do stavu najdikoniec.
 ### Stav najdikoniec
