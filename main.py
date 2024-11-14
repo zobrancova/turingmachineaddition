@@ -184,10 +184,14 @@ class TuringMachine:
         return ''.join(self.tape)
 
 while True:
+    tape = ["#"] * 100
     # user_input
     user_input = list(input())
+    #danie vstupu na stred pasky
+    start_tape = (100-len(user_input))//2
+    tape[start_tape:start_tape+len(user_input)] = user_input
     #zavolanie turingovho stroja
-    turingmachine = TuringMachine(user_input)
+    turingmachine = TuringMachine(tape)
     final_tape = turingmachine.run()
     print("Final tape:", final_tape)
     choice = input("Would you like to enter another input? (yes/no): ").strip().lower()
