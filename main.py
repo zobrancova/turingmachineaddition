@@ -1,9 +1,40 @@
+
 class TuringMachine:
     def __init__(self, tape, blank='#'):
-        self.tape = tape  #user_input je to co dame na vstupe/resp v kóde
-        self.blank = blank  #mriezka je blank symbol
-        self.head = self.find_first_number()  #nastavenie hlavy na prvom neprazdom symbole
-        self.state = 'zaciatok'  #zaciatocnz stav je zaciatok
+        self.tape = tape  # user_input je to co dame na vstupe/resp v kóde
+        self.blank = blank  # mriezka je blank symbol
+        self.head = self.find_first_number()  # nastavenie hlavy na prvom neprazdom symbole
+        self.state = 'zaciatok'  # zaciatocnz stav je zaciatok
+        self.state_to_binary = {
+        'zaciatok': '0001',
+        'najdikoniec': '0010',
+        'mriezkakoniec': '0011',
+        'idemnazaciatok': '0100',
+        'doprava': '0101',
+        'mriezka': '0110',
+        'citaj': '0111',
+        'mam1': '1000',
+        'mam0': '1001',
+        'pripocitaj1': '1010',
+        'pripocitaj0': '1011',
+        'vymaz1': '1100',
+        'vymaz0': '1101',
+        'prenasam': '1110',
+        'prepis': '1111',
+        'done': '0000'
+        }
+        self.symbol_to_binary = {
+        '0': '0010',
+        '1': '0001',
+        '#': '0000',
+        'z': '0011',
+        'k': '0100',
+        ' ': '0101',
+        '+': '0110',
+        'c': '0111',
+        'I': '1000',
+        'O': '1001'
+        }
 
     def find_first_number(self):
         #tuto funkciu aplikujem aby som zacinala na zaciatku slova, teda binarneho cisla
@@ -16,10 +47,11 @@ class TuringMachine:
         symbol = self.tape[self.head] if self.head < len(self.tape) else self.blank
 
         #printovanie kazdeho kroku pasky
-        print(f"State: {self.state}, Head Position: {self.head}, Symbol: {symbol}")
+        print(f"State: {self.state_to_binary[self.state]} (Original: {self.state}), "
+              f"Head Position: {self.head}, Symbol: {symbol} (Binary: {self.symbol_to_binary.get(symbol, 'N/A')})")
 
-        #na zaklade stavov ktore som si vytvorila v turingmachine.io tak som si napisala nieto podmienky
-        #tento cely princip je vysvetleny v readme na gite
+        # na zaklade stavov ktore som si vytvorila v turingmachine.io tak som si napisala nieto podmienky
+        # tento cely princip je vysvetleny v readme na gite
         if self.state == 'zaciatok':
             #
             if symbol in '01':
@@ -151,10 +183,14 @@ class TuringMachine:
                 self.transition('doprava', 'R')
 
         elif self.state == 'done':
-            print("Machine has reached the 'done' state.")
-            return True  # Halting condition
+            print("Turing je v koncovom stave")
+            print("Zakodovana paska:", self.get_binary_output())
+            return True  #konec
 
         return False  # Continue execution
+
+    def get_binary_output(self):
+        return ''.join([self.symbol_to_binary.get(symbol, '0000') for symbol in self.tape])
 
     def write(self, symbol):
         if self.head >= len(self.tape):
@@ -183,21 +219,21 @@ class TuringMachine:
                 break
         return ''.join(self.tape)
 
+
+# Main loop
 while True:
     tape = ["#"] * 100
-    # user_input
-    user_input = list(input())
-    #danie vstupu na stred pasky
-    start_tape = (100-len(user_input))//2
-    tape[start_tape:start_tape+len(user_input)] = user_input
-    #zavolanie turingovho stroja
-    turingmachine = TuringMachine(tape)
-    final_tape = turingmachine.run()
-    print("Final tape:", final_tape)
-    choice = input("Would you like to enter another input? (yes/no): ").strip().lower()
-    if choice != 'yes':
+    # User input
+    user_input = list(input(""))
+    start_tape = (100 - len(user_input)) // 2
+    tape[start_tape:start_tape + len(user_input)] = user_input
+    # Turing machine simulation
+    turing_machine = TuringMachine(tape)
+    final_tape = turing_machine.run()
+    print("Finalna paska", final_tape)
+
+    choice = input("Chcete pokracovat? (ano/nie): ").strip().lower()
+    if choice != 'ano':
         print("Exit.")
         break
-#
-
 
